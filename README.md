@@ -108,9 +108,12 @@ ORDER BY
     OrderDateKey ASC
 ```
 
+# Relationships (Power BI)
+The following relationships were created in Power BI:
 
+![Relationships](assets/table_relationships.png)
 
-# The Results
+# Reports (Power BI)
 The following Power BI dashboards were created:
 
 ### Sales Overview
