@@ -23,6 +23,104 @@ For my project I utilized the following tools:
 - **Power BI:** Data visualization tool.
 -**Git & GitHub:** Version control system and repository.
 
+# SQL Queries
+The following SQL queries were used to extract the data from the database.
+```sql
+-- Cleansed Dim_Date Table --
+USE
+    AdventureWorksDW2022
+SELECT
+    DateKey
+    ,FullDateAlternateKey AS Date
+    ,EnglishDayNameOfWeek AS Day
+    ,EnglishMonthName AS Month
+    ,LEFT(EnglishMonthName, 3) AS MonthShort  --Useful for front end date navigation and front end graphs.
+    ,MonthNumberOfYear AS MonthNo
+    ,CalendarQuarter AS Quarter
+    ,CalendarYear AS Year 
+FROM
+    [dbo].[dimdate] 
+WHERE
+    CalendarYear >= 2019
+```
+
+```sql
+-- Cleansed Dim_Customer's Table --
+USE
+    AdventureWorksDW2022
+SELECT
+    c.[CustomerKey] AS CustomerKey
+      ,c.[FirstName] AS 'First Name'
+      ,c.[LastName] AS 'Last Name'
+      ,c.FirstName + ' ' + c.LastName AS 'Full Name'
+      ,CASE c.[Gender] WHEN 'M' THEN 'Male' WHEN 'F' THEN 'Female' END AS Gender
+      ,c.[DateFirstPurchase] AS 'Date First Purchase'
+      ,g.City AS 'Customer City' -- Joined in Customer City form Geography Table
+FROM
+    [AdventureWorksDW2022].[dbo].[DimCustomer] AS c
+    LEFT JOIN dbo.DimGeography AS g ON g.GeographyKey = c.GeographyKey
+ORDER BY
+    CustomerKey ASC  -- Ordered List by Customer Key
+```
+
+```sql
+-- Cleansed Dim_Products Table --
+USE
+    AdventureWorksDW2022
+SELECT 
+    p.[ProductKey]
+    ,p.[ProductAlternateKey] AS ProductItemCode
+    ,p.[EnglishProductName] AS 'Product Name'
+    ,ps.EnglishProductSubcategoryName AS 'Sub Category'  -- Joined in from Sub Category Table
+    ,pc.EnglishProductCategoryName AS 'Product Category'  -- Joined in from Category Table
+    ,p.[Color] AS 'Product Color'
+    ,p.[Size] AS 'Product Size'
+    ,p.[ProductLine] AS 'Product Line'
+    ,p.[ModelName] AS 'Product Model Name'
+    ,p.[EnglishDescription] AS 'Product Description'
+    ,ISNULL(p.[Status], 'Outdated') AS 'Product Status'
+  FROM
+        [dbo].[DimProduct] AS p
+        LEFT JOIN dbo.DimProductSubcategory AS ps ON ps.ProductCategoryKey = p.ProductSubcategoryKey
+        LEFT JOIN dbo.DimProductCategory AS pc ON ps.ProductCategoryKey = pc.ProductCategoryKey
+ORDER BY
+    p.ProductKey ASC
+```
+
+```sql
+-- Cleansed Fact_InternetSales Table --
+USE
+    AdventureWorksDW2022
+SELECT
+    [ProductKey]
+    ,CONVERT(date, CONVERT(varchar(8), [OrderDateKey], 101)) AS [OrderDateKey]
+    ,CONVERT(date, CONVERT(varchar(8), [DueDateKey], 101)) AS [DueDateKey]
+    ,CONVERT(date, convert(varchar(8), [ShipDateKey], 101)) AS [ShipDateKey]
+    ,[CustomerKey]
+    ,[SalesOrderNumber]
+    ,[SalesAmount]
+FROM
+    [dbo].[FactInternetSales]
+WHERE
+    LEFT(OrderDateKey, 4) >= YEAR(GETDATE()) -2
+-- Ensures we always bring only two years of dates from the extraction.
+ORDER BY
+    OrderDateKey ASC
+```
+
+
+
 # The Results
 The following Power BI dashboards were created:
 
+### Sales Overview
+![Sales Overview](assets/sales_overview.png)
+
+### Customer Details
+![Customer Details](assets/customer_details.png)
+
+### Product Details
+![Product Details](assets/product_details.png)
+
+# Conclusion
+This project was a great learning experience. I learned a lot about SQL and Power BI. I am looking forward to learning more about these tools and using them in my future projects.
