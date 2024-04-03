@@ -3,8 +3,6 @@ This project set out to explore the AdventureWorks dataset from Microsoft SQL Se
 
 SQL queries and Power BI files are included in the repository.
 
-<em>"<iframe title="Sales_Report" width="600" height="373.5" src="https://app.powerbi.com/view?r=eyJrIjoiNDlhNDdjOWEtOGRkMS00OWM1LTkyNGItNmE4YzQ1YjAxNjU1IiwidCI6ImRmODY3OWNkLWE4MGUtNDVkOC05OWFjLWM4M2VkN2ZmOTVhMCJ9&pageName=ReportSection" frameborder="0" allowFullScreen="true"></iframe>"
-
 # Background
 This project was driven by a desire to showcase my SQL and Power BI skills and build up my data analysis portfolio.
 
